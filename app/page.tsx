@@ -5,40 +5,39 @@ export default function Home() {
   const [form, setForm] = useState({ name: '', date: '', meal: 'mic dejun', status: 'da' });
   const [message, setMessage] = useState('');
 
-  const handleSubmit = async (e: any) => {
-  e.preventDefault();
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
 
-  const selectedDate = new Date(form.date);
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-  selectedDate.setHours(0, 0, 0, 0);
+    const selectedDate = new Date(form.date);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    selectedDate.setHours(0, 0, 0, 0);
 
-  if (selectedDate <= today) {
-    setMessage('⚠️ Nu poți modifica ziua curentă sau trecută.');
-    return;
-  }
-
-  try {
-    const res = await fetch('/api/modify', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(form),
-    });
-
-    const text = await res.text();
-    const data = text ? JSON.parse(text) : null;
-
-    if (res.ok && data) {
-      setMessage(data.message || '✅ Modificare aplicată cu succes!');
-    } else {
-      setMessage(data?.error || '❌ Ceva nu a mers.');
+    if (selectedDate <= today) {
+      setMessage('⚠️ Nu poți modifica ziua curentă sau trecută.');
+      return;
     }
-  } catch (err) {
-    console.error('Eroare la submit:', err);
-    setMessage('❌ Eroare de rețea sau server.');
-  }
-};
 
+    try {
+      const res = await fetch('/api/modify', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(form),
+      });
+
+      const text = await res.text();
+      const data = text ? JSON.parse(text) : null;
+
+      if (res.ok && data) {
+        setMessage(data.message || '✅ Modificare aplicată cu succes!');
+      } else {
+        setMessage(data?.error || '❌ Ceva nu a mers.');
+      }
+    } catch (err) {
+      console.error('Eroare la submit:', err);
+      setMessage('❌ Eroare de rețea sau server.');
+    }
+  };
 
   return (
     <div className="max-w-md mx-auto mt-10 p-4 bg-white rounded-xl shadow text-black">
