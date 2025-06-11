@@ -11,7 +11,7 @@ const SHEET_NAME = process.env.SHEET_NAME; // din .env.local
 // Verifică dacă este mediu de dezvoltare și încarcă credențialele din fișierul JSON sau din variabilele de mediu
 const credentials = process.env.NODE_ENV === 'development'
   ? JSON.parse(readFileSync(path.join(process.cwd(), 'credentials/service-account.json'), 'utf-8'))
-  : JSON.parse(process.env.GOOGLE_CREDENTIALS || '{}'); // din .env.local
+  : JSON.parse(process.env.GOOGLE_CREDENTIALS || ''); // din .env.local
 const auth = new google.auth.GoogleAuth({
   credentials,
   scopes: SCOPES,
